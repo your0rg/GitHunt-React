@@ -104,7 +104,7 @@ function Layout({ children, params, location }) {
             />
           </ul>
 
-          <ProfileWithData />
+          {/* <ProfileWithData /> */}
         </div>
       </nav>
       <div className="container">

@@ -112,7 +112,7 @@ class CommentsPage extends React.Component {
 
   componentDidMount() {
     if (this.props.loading === false){
-      this.subscribe(this.props.entry.repository.full_name, this.props.updateCommentsQuery);
+      // this.subscribe(this.props.entry.repository.full_name, this.props.updateCommentsQuery);
     }
   }
 
@@ -121,13 +121,13 @@ class CommentsPage extends React.Component {
       if (this.subscriptionObserver) {
         this.subscriptionObserver.unsubscribe();
       }
-      this.subscribe(nextProps.entry.repository.full_name, nextProps.updateCommentsQuery);
+      // this.subscribe(nextProps.entry.repository.full_name, nextProps.updateCommentsQuery);
     }
   }
 
   componentWillUnmount() {
     if (this.subscriptionObserver) {
-      this.subscriptionObserver.unsubscribe();
+      // this.subscriptionObserver.unsubscribe();
     }
   }
 
