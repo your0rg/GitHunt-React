@@ -48,6 +48,7 @@
     "apollo-client": "^0.4.14",
     "classnames": "^2.2.5",
     "express": "^4.14.0",
+    "graphql-anywhere": "^0.2.4",
     "graphql-tag": "^0.1.7",
     "http-proxy-middleware": "^0.17.1",
     "isomorphic-fetch": "^2.2.1",
@@ -76,7 +77,12 @@
     "rules": {
       "camelcase": 0,
       "react/jsx-filename-extension": 0,
-      "react/no-unused-prop-types": [2, { "skipShapeProps": true }]
+      "react/no-unused-prop-types": [
+        2,
+        {
+          "skipShapeProps": true
+        }
+      ]
     }
   }
 }
