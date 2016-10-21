@@ -56,7 +56,7 @@ const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
   options(props) {
     return {
-      fragments: FeedEntry.fragment.fragments(),
+      fragments: FeedEntry.fragments.entry.fragments(),
       variables: {
         type: (
           props.params &&

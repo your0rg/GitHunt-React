@@ -2266,7 +2266,7 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphql-anywhere:
+graphql-anywhere, graphql-anywhere@^0.2.4:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/graphql-anywhere/-/graphql-anywhere-0.2.4.tgz#700d5106dc7fbd39a08084d81a6f543475589774"
   dependencies:
@@ -2287,6 +2287,12 @@ graphql-anywhere:
     lodash.mapvalues "^4.4.0"
     lodash.merge "^4.6.0"
     lodash.pick "^4.2.0"
+
+graphql-fragments:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/graphql-fragments/-/graphql-fragments-0.1.0.tgz#21e04a3913f7cc8cfbc42c3e1d8b323a5847655e"
+  dependencies:
+    graphql-anywhere "^0.2.4"
 
 graphql-subscriptions@^0.1.3:
   version "0.1.5"

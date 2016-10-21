@@ -3,8 +3,7 @@ import ApolloClient from 'apollo-client';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router';
 import gql from 'graphql-tag';
-
-import Fragment from '../helpers/Fragment';
+import Fragment from 'graphql-fragments';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
@@ -40,7 +39,7 @@ const FeedEntry = ({
       <div className="media-vote">
         <VoteButtons
           canVote={loggedIn}
-          entry={VoteButtons.fragment.filter(entry)}
+          entry={VoteButtons.fragments.entry.filter(entry)}
           onVote={type => onVote({
             repoFullName: full_name,
             type,
@@ -61,7 +60,7 @@ const FeedEntry = ({
         <h4 className="media-heading">
           <a href={html_url}>{full_name}</a>
         </h4>
-        <RepoInfo entry={RepoInfo.fragment.filter(entry)} >
+        <RepoInfo entry={RepoInfo.fragments.entry.filter(entry)} >
           <Link to={repoLink} onMouseOver={prefetchComments(entry.repository.full_name)}>
             View comments ({commentCount})
           </Link>
@@ -71,25 +70,27 @@ const FeedEntry = ({
   );
 };
 
-FeedEntry.fragment = new Fragment(gql`
-  fragment FeedEntry on Entry {
-    commentCount
-    repository {
-      full_name
-      html_url
-      owner {
-        avatar_url
+FeedEntry.fragments = {
+  entry: new Fragment(gql`
+    fragment FeedEntry on Entry {
+      commentCount
+      repository {
+        full_name
+        html_url
+        owner {
+          avatar_url
+        }
       }
+      ...VoteButtons
+      ...RepoInfo
     }
-    ...VoteButtons
-    ...RepoInfo
-  }
-`, VoteButtons.fragment, RepoInfo.fragment);
+  `, VoteButtons.fragments.entry, RepoInfo.fragments.entry),
+};
 
 FeedEntry.propTypes = {
   loggedIn: React.PropTypes.bool.isRequired,
   onVote: React.PropTypes.func.isRequired,
-  entry: FeedEntry.fragment.propType,
+  entry: FeedEntry.fragments.entry.propType,
   client: React.PropTypes.instanceOf(ApolloClient).isRequired,
 };
 
