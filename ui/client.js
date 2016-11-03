@@ -1,18 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
-import ApolloClient, { createNetworkInterface, addTypename } from 'apollo-client';
+import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
-const ReactGA = require('react-ga');
+import * as ReactGA from 'react-ga';
 // Polyfill fetch
 import 'isomorphic-fetch';
 
-import routes from './routes.js';
+import './style/index.css';
 
-import './style.css';
-
-import { Client } from 'subscriptions-transport-ws';
-import addGraphQLSubscriptions from './subscriptions';
+import routes from './routes';
+import createApolloClient from './helpers/create-apollo-client';
 
 // const wsClient = new Client('ws://localhost:8080');
 
@@ -37,18 +35,9 @@ function logPageView() {
   ReactGA.pageview(window.location.pathname);
 }
 
-const client = new ApolloClient({
-  networkInterface: networkInterface,
-  queryTransformer: addTypename,
-  dataIdFromObject: (result) => {
-    if (result.id && result.__typename) { // eslint-disable-line no-underscore-dangle
-      return result.__typename + result.id; // eslint-disable-line no-underscore-dangle
-    }
-    return null;
-  },
-  shouldBatch: true,
+const client = createApolloClient({
+  networkInterface,
   initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
-  ssrForceFetchDelay: 100,
 });
 
 render((

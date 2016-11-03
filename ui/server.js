@@ -1,7 +1,7 @@
 import Express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { getDataFromTree } from 'react-apollo/server';
 import { match, RouterContext } from 'react-router';
@@ -10,7 +10,8 @@ import 'isomorphic-fetch';
 import proxy from 'http-proxy-middleware';
 
 import routes from './routes';
-import Html from './Html';
+import Html from './routes/Html';
+import createApolloClient from './helpers/create-apollo-client';
 
 const basePort = process.env.PORT || 3000;
 const apiHost = `http://localhost:${basePort + 10}`;
@@ -33,9 +34,10 @@ app.use((req, res) => {
       console.error('ROUTER ERROR:', error); // eslint-disable-line no-console
       res.status(500);
     } else if (renderProps) {
-      const client = new ApolloClient({
+      const client = createApolloClient({
         ssrMode: true,
-        networkInterface: createNetworkInterface(apiUrl, {
+        networkInterface: createNetworkInterface({
+          uri: apiUrl,
           credentials: 'same-origin',
           // transfer request headers to networkInterface so that they're accessible to proxy server
           // Addresses this issue: https://github.com/matthew-andrews/isomorphic-fetch/issues/83
@@ -49,11 +51,14 @@ app.use((req, res) => {
         </ApolloProvider>
       );
 
-      getDataFromTree(component).then(context => {
+      getDataFromTree(component).then((context) => {
         const content = ReactDOM.renderToString(component);
         res.status(200);
 
-        const html = <Html content={content} state={context.store.getState()} />;
+        const html = (<Html
+          content={content}
+          state={{ apollo: { data: context.store.getState().apollo.data } }}
+        />);
         res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
         res.end();
       }).catch(e => console.error('RENDERING ERROR:', e)); // eslint-disable-line no-console
