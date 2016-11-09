@@ -1,9 +1,10 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Link } from 'react-router';
+import ApolloClient from 'apollo-client';
 
-function Profile({ loading, currentUser }) {
+function Profile({ loading, currentUser, client }) {
   if (loading) {
     return (
       <p className="navbar-text navbar-right">
@@ -17,6 +18,7 @@ function Profile({ loading, currentUser }) {
           {currentUser.login}
           &nbsp;
           <a href="/logout">Log out</a>
+          <button onClick={client.resetStore.bind(client)}>resetStore</button>
         </p>
         <Link
           type="submit"
@@ -41,6 +43,7 @@ function Profile({ loading, currentUser }) {
 }
 
 Profile.propTypes = {
+  client: React.PropTypes.instanceOf(ApolloClient),
   loading: React.PropTypes.bool,
   currentUser: React.PropTypes.shape({
     login: React.PropTypes.string.isRequired,
@@ -56,9 +59,9 @@ const PROFILE_QUERY = gql`
   }
 `;
 
-export default graphql(PROFILE_QUERY, {
+export default withApollo(graphql(PROFILE_QUERY, {
   options: { forceFetch: true },
   props: ({ data: { loading, currentUser } }) => ({
     loading, currentUser,
   }),
-})(Profile);
+})(Profile));
