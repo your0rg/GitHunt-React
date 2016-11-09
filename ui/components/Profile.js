@@ -4,42 +4,52 @@ import gql from 'graphql-tag';
 import { Link } from 'react-router';
 import ApolloClient from 'apollo-client';
 
-function Profile({ loading, currentUser, client }) {
-  if (loading) {
+class Profile extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.resetStore = props.client.resetStore.bind(props.client);
+  }
+
+  render() {
+    const { loading, currentUser } = this.props;
+
+    if (loading) {
+      return (
+        <p className="navbar-text navbar-right">
+          Loading...
+        </p>
+      );
+    } else if (currentUser) {
+      return (
+        <span>
+          <p className="navbar-text navbar-right">
+            {currentUser.login}
+            &nbsp;
+            <a href="/logout">Log out</a>
+            <button onClick={this.resetStore}>resetStore</button>
+          </p>
+          <Link
+            type="submit"
+            className="btn navbar-btn navbar-right btn-success"
+            to="/submit"
+          >
+            <span
+              className="glyphicon glyphicon-plus"
+              aria-hidden="true"
+            />
+            &nbsp;
+            Submit
+          </Link>
+        </span>
+      );
+    }
     return (
       <p className="navbar-text navbar-right">
-        Loading...
+        <a href="/login/github">Log in with GitHub</a>
       </p>
     );
-  } else if (currentUser) {
-    return (
-      <span>
-        <p className="navbar-text navbar-right">
-          {currentUser.login}
-          &nbsp;
-          <a href="/logout">Log out</a>
-          <button onClick={client.resetStore.bind(client)}>resetStore</button>
-        </p>
-        <Link
-          type="submit"
-          className="btn navbar-btn navbar-right btn-success"
-          to="/submit"
-        >
-          <span
-            className="glyphicon glyphicon-plus"
-            aria-hidden="true"
-          />
-          &nbsp;
-          Submit
-        </Link>
-      </span>
-    );
   }
-  return (
-    <p className="navbar-text navbar-right">
-      <a href="/login/github">Log in with GitHub</a>
-    </p>
-  );
 }
 
 Profile.propTypes = {
