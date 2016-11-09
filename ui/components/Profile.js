@@ -8,7 +8,7 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    this.resetStore = props.client.resetStore.bind(props.client);
+    this.resetStore = props.client.resetStore;
   }
 
   render() {
