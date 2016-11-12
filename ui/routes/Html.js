@@ -15,7 +15,7 @@ const Html = ({ content, state }) => (
       <title>GitHunt</title>
     </head>
     <body>
-      <div id="content" dangerouslySetInnerHTML={{ __html: content }} />
+      <div id="content" />
       <div id="footer">
         <ul>
           <li>Fork on <a href="https://github.com/apollostack/GitHunt">Github</a></li>

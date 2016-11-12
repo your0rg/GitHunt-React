@@ -35,7 +35,7 @@ body {
   padding-bottom: 60px;
 }
 
-.comment-box { 
+.comment-box {
   border-top:1px solid black;
   padding: 5px;
 }
@@ -55,4 +55,23 @@ body {
   margin: 40px 10px;
   color: #999;
   font-size: 13px;
+}
+
+.inspector-overlay {
+  position: fixed;
+  right: 10px;
+  width: 600px;
+  height: 300px;
+  bottom: 50px;
+  border: 1px solid #ccc;
+  background: white;
+
+  font-family: monospace;
+  font-size: 10px;
+  white-space: pre;
+  overflow: scroll;
+}
+
+.store-tree-field-set {
+  margin-left: 30px;
 }
