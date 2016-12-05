@@ -13,6 +13,7 @@ import './style/index.css';
 import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
 import addGraphQLSubscriptions from './helpers/subscriptions';
+import Inspector from './inspector';
 
 const wsClient = new Client('ws://localhost:8080');
 
@@ -44,9 +45,14 @@ const client = createApolloClient({
 });
 
 render((
-  <ApolloProvider client={client}>
-    <Router history={browserHistory} onUpdate={logPageView}>
-      {routes}
-    </Router>
-  </ApolloProvider>
+  <div>
+    <ApolloProvider client={client}>
+      <Router history={browserHistory} onUpdate={logPageView}>
+        {routes}
+      </Router>
+    </ApolloProvider>
+    <div className="inspector-overlay">
+      <Inspector client={client} />
+    </div>
+  </div>
 ), document.getElementById('content'));
