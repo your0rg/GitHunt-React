@@ -75,3 +75,8 @@ body {
 .store-tree-field-set {
   margin-left: 30px;
 }
+
+.store-tree-ref-id {
+  margin-left: 15px;
+  color: blue;
+}
