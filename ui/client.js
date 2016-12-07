@@ -51,8 +51,6 @@ render((
         {routes}
       </Router>
     </ApolloProvider>
-    <div className="inspector-overlay">
-      <Inspector client={client} />
-    </div>
+    <Inspector client={client} />
   </div>
 ), document.getElementById('content'));
