@@ -96,6 +96,7 @@ body {
   width: 150px;
   min-width: 150px;
   overflow: scroll;
+  border-right: 1px solid #ddd;
 }
 
 .inspector-sidebar-item {
