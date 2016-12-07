@@ -130,7 +130,7 @@ function highlightFromSearchTerm({ data, query }) {
   Object.keys(data).forEach((dataId) => {
     dfsSearch({
       data,
-      query,
+      regex: new RegExp(query),
       toHighlight,
       dataId,
     });
@@ -139,21 +139,24 @@ function highlightFromSearchTerm({ data, query }) {
   return toHighlight;
 }
 
-function dfsSearch({ data, query, toHighlight, pathToId = [], dataId }) {
+function dfsSearch({ data, regex, toHighlight, pathToId = [], dataId }) {
   const storeObj = data[dataId];
   const storeObjHighlight = {};
 
   Object.keys(storeObj).forEach((storeFieldKey) => {
     const val = storeObj[storeFieldKey];
 
-    if (typeof val === 'string' && new RegExp(query).test(val)) {
+    const valueMatches = typeof val === 'string' && regex.test(val);
+    const keyMatches = regex.test(storeFieldKey);
+
+    if (valueMatches || keyMatches) {
       storeObjHighlight[storeFieldKey] = val;
     }
 
     if (val && val.id && val.generated) {
       dfsSearch({
         data,
-        query,
+        regex,
         toHighlight,
         pathToId: [...pathToId, [dataId, storeFieldKey]],
         dataId: val.id,
@@ -317,6 +320,44 @@ class StoreTreeValue extends React.Component {
 
 // Props: data, storeKey, value
 class StoreTreeField extends React.Component {
+  static contextTypes = {
+    inspectorContext: React.PropTypes.object.isRequired,
+  }
+
+  getPossibleTypename() {
+    let unwrapped = this.props.value;
+    let isArray = false;
+
+    while (Array.isArray(unwrapped)) {
+      unwrapped = unwrapped[0];
+      isArray = true;
+    }
+
+    const targetStoreObj = unwrapped &&
+      unwrapped.id &&
+      this.context.inspectorContext.dataWithOptimistic[unwrapped.id];
+
+    const baseTypename = targetStoreObj && targetStoreObj.__typename;
+
+    if (baseTypename && isArray) {
+      return '[' + baseTypename + ']';
+    }
+
+    return baseTypename;
+  }
+
+  renderPossibleTypename() {
+    const __typename = this.getPossibleTypename();
+
+    if (! __typename) {
+      return '';
+    }
+
+    return (
+      <span class="inspector-typename">{__typename}</span>
+    );
+  }
+
   render() {
     let className = 'inspector-field-key';
 
@@ -330,6 +371,7 @@ class StoreTreeField extends React.Component {
           {this.props.storeKey}
         </span>
         :{" "}
+        {this.renderPossibleTypename()}
         <StoreTreeValue value={this.props.value} highlight={this.props.highlight} />
       </div>
     )
