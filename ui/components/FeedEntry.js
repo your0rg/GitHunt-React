@@ -3,11 +3,11 @@ import ApolloClient from 'apollo-client';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router';
 import gql from 'graphql-tag';
-import Fragment from 'graphql-fragments';
+import { filter, propType } from 'graphql-anywhere';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
-import CommentsPage, { COMMENT_QUERY } from '../routes/CommentsPage';
+import { COMMENT_QUERY } from '../routes/CommentsPage';
 
 const FeedEntry = ({
   loggedIn,
@@ -31,7 +31,6 @@ const FeedEntry = ({
     client.query({
       query: COMMENT_QUERY,
       variables: { repoName: repoFullName },
-      fragments: CommentsPage.fragments.comment.fragments(),
     });
   };
 
@@ -40,7 +39,7 @@ const FeedEntry = ({
       <div className="media-vote">
         <VoteButtons
           canVote={loggedIn}
-          entry={VoteButtons.fragments.entry.filter(entry)}
+          entry={filter(VoteButtons.fragments.entry, entry)}
           onVote={type => onVote({
             repoFullName: full_name,
             type,
@@ -61,7 +60,7 @@ const FeedEntry = ({
         <h4 className="media-heading">
           <a href={html_url}>{full_name}</a>
         </h4>
-        <RepoInfo entry={RepoInfo.fragments.entry.filter(entry)} >
+        <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)} >
           <Link to={repoLink} onMouseOver={prefetchComments(entry.repository.full_name)}>
             View comments ({commentCount})
           </Link>
@@ -72,8 +71,9 @@ const FeedEntry = ({
 };
 
 FeedEntry.fragments = {
-  entry: new Fragment(gql`
+  entry: gql`
     fragment FeedEntry on Entry {
+      id
       commentCount
       repository {
         full_name
@@ -85,13 +85,15 @@ FeedEntry.fragments = {
       ...VoteButtons
       ...RepoInfo
     }
-  `, VoteButtons.fragments.entry, RepoInfo.fragments.entry),
+    ${VoteButtons.fragments.entry}
+    ${RepoInfo.fragments.entry}
+  `,
 };
 
 FeedEntry.propTypes = {
   loggedIn: React.PropTypes.bool.isRequired,
   onVote: React.PropTypes.func.isRequired,
-  entry: FeedEntry.fragments.entry.propType,
+  entry: propType(FeedEntry.fragments.entry).isRequired,
   client: React.PropTypes.instanceOf(ApolloClient).isRequired,
 };
 
