@@ -4,8 +4,13 @@ import { Link } from 'react-router';
 import Profile from '../components/Profile';
 import NavbarLink from '../components/NavbarLink';
 
+const isBrowser = typeof window !== 'undefined';
+const Panel = isBrowser ? require('apollo-client-devtools').Panel : undefined;
+// const Panel = undefined;
+
 const Layout = ({ children, params, location }) => (
   <div>
+    { Panel ? <Panel /> : null }
     <nav className="navbar navbar-default">
       <div className="container">
         <div className="navbar-header">

@@ -42,6 +42,7 @@ const client = createApolloClient({
   initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
   ssrForceFetchDelay: 100,
 });
+window.__APOLLO_CLIENT__ = client;
 
 render((
   <ApolloProvider client={client}>
