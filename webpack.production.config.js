@@ -20,6 +20,10 @@ module.exports = {
     }, {
       test: /\.json$/,
       loader: 'json'
+    },
+    {
+      test: /\.graphql$/,
+      loader: 'raw'
     }]
   },
   plugins: [

@@ -39,20 +39,9 @@ FeedPage.propTypes = {
   vote: React.PropTypes.func.isRequired,
 };
 
-const FEED_QUERY = gql`
-  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-    # Eventually move this into a no fetch query right on the entry
-    # since we literally just need this info to determine whether to
-    # show upvote/downvote buttons
-    currentUser {
-      login
-    }
-    feed(type: $type, offset: $offset, limit: $limit) {
-      ...FeedEntry
-    }
-  }
-  ${FeedEntry.fragments.entry}
-`;
+import query from '../queries/FeedQuery.graphql'; 
+const FEED_QUERY = query;
+
 const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
   options: props => ({

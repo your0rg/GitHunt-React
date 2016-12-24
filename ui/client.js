@@ -13,7 +13,6 @@ import './style/index.css';
 import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
 import addGraphQLSubscriptions from './helpers/subscriptions';
-
 const wsClient = new Client('ws://localhost:8080');
 
 const networkInterface = createNetworkInterface({
@@ -25,7 +24,7 @@ const networkInterface = createNetworkInterface({
 });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
-  networkInterface,
+  persistedQueriesNetworkInterface,
   wsClient,
 );
 
