@@ -5,6 +5,7 @@ import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { Client } from 'subscriptions-transport-ws';
 import * as ReactGA from 'react-ga';
+
 // Polyfill fetch
 import 'isomorphic-fetch';
 
@@ -14,6 +15,10 @@ import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
 import addGraphQLSubscriptions from './helpers/subscriptions';
 const wsClient = new Client('ws://localhost:8080');
+
+// import {
+//   PersistedQueryNetworkInterface,
+// } from 'extractgql/lib/src/network_interface/ApolloNetworkInterface';
 
 const networkInterface = createNetworkInterface({
   uri: '/graphql',
@@ -35,6 +40,8 @@ function logPageView() {
   ReactGA.set({ page: window.location.pathname });
   ReactGA.pageview(window.location.pathname);
 }
+
+console.log('Loading the client.');
 
 const client = createApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
