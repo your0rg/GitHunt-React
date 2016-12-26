@@ -17,7 +17,7 @@ import {
   PersistedQueryNetworkInterface,
 } from 'extractgql/lib/src/network_interface/ApolloNetworkInterface';
 
-import queryMap from 'raw!./../extracted_queries.json';
+import queryMap from '../extracted_queries.json';
 const basePort = process.env.PORT || 3000;
 const apiHost = `http://localhost:${basePort + 10}`;
 const apiUrl = `${apiHost}/graphql`;
@@ -39,6 +39,9 @@ app.use((req, res) => {
       console.error('ROUTER ERROR:', error); // eslint-disable-line no-console
       res.status(500);
     } else if (renderProps) {
+      console.log('Query map: ');
+      console.log(queryMap);
+
       const pNI = new PersistedQueryNetworkInterface({
         uri: apiUrl,
         opts: {
@@ -51,7 +54,6 @@ app.use((req, res) => {
         ssrMode: true,
         networkInterface: pNI,
       });
-
       const component = (
         <ApolloProvider client={client}>
           <RouterContext {...renderProps} />

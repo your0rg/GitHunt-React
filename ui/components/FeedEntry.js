@@ -7,7 +7,8 @@ import { filter, propType } from 'graphql-anywhere';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
-import CommentsPage, { COMMENT_QUERY } from '../routes/CommentsPage';
+import CommentsPage from '../routes/CommentsPage';
+import COMMENT_QUERY from '../queries/Comment.graphql';
 
 const FeedEntry = ({
   loggedIn,

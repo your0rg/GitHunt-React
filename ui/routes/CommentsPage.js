@@ -7,6 +7,10 @@ import Fragment from 'graphql-fragments';
 import RepoInfo from '../components/RepoInfo';
 import Comment from '../components/Comment';
 
+import SUBSCRIPTION_QUERY from '../queries/CommentSubscription.graphql';
+import COMMENT_QUERY from '../queries/Comment.graphql';
+import SUBMIT_COMMENT_MUTATION from '../queries/SubmitComment.graphql';
+
 // helper function checks for duplicate comments, which we receive because we
 // get subscription updates for our own comments as well.
 // TODO it's pretty inefficient to scan all the comments every time.
@@ -14,20 +18,6 @@ import Comment from '../components/Comment';
 function isDuplicateComment(newComment, existingComments) {
   return newComment.id !== null && existingComments.some(comment => newComment.id === comment.id);
 }
-
-const SUBSCRIPTION_QUERY = gql`
-  subscription onCommentAdded($repoFullName: String!){
-    commentAdded(repoFullName: $repoFullName){
-      id
-      postedBy {
-        login
-        html_url
-      }
-      createdAt
-      content
-    }
-  }
-`;
 
 class CommentsPage extends React.Component {
   constructor(props) {
@@ -191,14 +181,6 @@ CommentsPage.propTypes = {
   subscribeToMore: React.PropTypes.func,
 };
 
-const SUBMIT_COMMENT_MUTATION = gql`
-  mutation submitComment($repoFullName: String!, $commentContent: String!) {
-    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-      ...CommentsPageComment
-    }
-  }
-`;
-
 const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
   options: { fragments: CommentsPage.fragments.comment.fragments() },
   props: ({ ownProps, mutate }) => ({
@@ -233,36 +215,6 @@ const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
       }),
   }),
 });
-
-export const COMMENT_QUERY = gql`
-  query Comment($repoName: String!) {
-    # Eventually move this into a no fetch query right on the entry
-    # since we literally just need this info to determine whether to
-    # show upvote/downvote buttons
-    currentUser {
-      login
-      html_url
-    }
-    entry(repoFullName: $repoName) {
-      id
-      postedBy {
-        login
-        html_url
-      }
-      createdAt
-      comments {
-        ...CommentsPageComment
-      }
-      repository {
-        full_name
-        html_url
-        description
-        open_issues_count
-        stargazers_count
-      }
-    }
-  }
-`;
 
 const withData = graphql(COMMENT_QUERY, {
   options: ({ params }) => ({

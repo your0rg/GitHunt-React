@@ -39,8 +39,7 @@ FeedPage.propTypes = {
   vote: React.PropTypes.func.isRequired,
 };
 
-import query from '../queries/FeedQuery.graphql'; 
-const FEED_QUERY = query;
+import FEED_QUERY from '../queries/FeedQuery.graphql';
 
 const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {

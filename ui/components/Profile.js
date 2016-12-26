@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Link } from 'react-router';
+import PROFILE_QUERY from '../queries/Profile.graphql';
 
 function Profile({ loading, currentUser }) {
   if (loading) {
@@ -46,15 +47,6 @@ Profile.propTypes = {
     login: React.PropTypes.string.isRequired,
   }),
 };
-
-const PROFILE_QUERY = gql`
-  query CurrentUserForLayout {
-    currentUser {
-      login
-      avatar_url
-    }
-  }
-`;
 
 export default graphql(PROFILE_QUERY, {
   options: { forceFetch: true },
