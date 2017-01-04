@@ -16,17 +16,32 @@ import createApolloClient from './helpers/create-apollo-client';
 import addGraphQLSubscriptions from './helpers/subscriptions';
 const wsClient = new Client('ws://localhost:8080');
 
-// import {
-//   PersistedQueryNetworkInterface,
-// } from 'extractgql/lib/src/network_interface/ApolloNetworkInterface';
+import queryMap from '../extracted_queries.json';
+console.log('Query map: ');
+console.log(queryMap);
 
-const networkInterface = createNetworkInterface({
-  uri: '/graphql',
+import {
+  PersistedQueryNetworkInterface,
+} from 'extractgql/lib/src/network_interface/ApolloNetworkInterface';
+
+const persistedQueriesNetworkInterface = new PersistedQueryNetworkInterface({
+  queryMap,
   opts: {
     credentials: 'same-origin',
   },
-  transportBatching: true,
+  uri: '/graphql',
 });
+
+console.log('Persisted queries network interface: ');
+console.log(persistedQueriesNetworkInterface);
+
+// const networkInterface = createNetworkInterface({
+//   uri: '/graphql',
+//   opts: {
+//     credentials: 'same-origin',
+//   },
+//   transportBatching: true,
+// });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   persistedQueriesNetworkInterface,
