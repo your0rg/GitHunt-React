@@ -3,6 +3,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
 import Fragment from 'graphql-fragments';
+import { filter } from 'graphql-anywhere';
 
 import RepoInfo from '../components/RepoInfo';
 import Comment from '../components/Comment';
@@ -95,12 +96,11 @@ class CommentsPage extends React.Component {
     }
 
     const repository = entry.repository;
-
     return (
       <div>
         <div>
           <h1>Comments for <a href={repository.html_url}>{repository.full_name}</a></h1>
-          <RepoInfo entry={RepoInfo.fragments.entry.filter(entry)} />
+          <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)} />
           {currentUser ? <form onSubmit={this.submitForm}>
             <div className="form-group">
 
